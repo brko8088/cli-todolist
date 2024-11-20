@@ -21,7 +21,7 @@ void Checklist::deleteTodo()
 string Checklist::displayItem()
 {
     stringstream item;
-    item << setw(8) << left << ;
+    item << setw(8) << left << "";
     item << setw(2) << left << "[";
     item << setw(2) << left << printState();
     item << setw(8) << "]";

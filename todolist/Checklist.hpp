@@ -107,7 +107,7 @@ public:
     void deleteTodo();
     string printState();
     string printPriority();
-    string displayItem(int i);
+    string displayItem();
 };
 
 #endif /* Checklist_hpp */

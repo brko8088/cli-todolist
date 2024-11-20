@@ -1,7 +1,8 @@
-.DS_Store
 database
-debug
 
-# MSVC
+# misc
 .vs
+.vscode
+.DS_Store
+debug
 
