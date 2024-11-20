@@ -22,31 +22,32 @@ private:
     int priority;
     bool isItDone;
     string dueDate;
-    
+
 public:
-    Checklist(){
+    Checklist()
+    {
         setName("");
         setPriority(0);
         setItemFinished(false);
         setDueDate("");
     }
-    
-    Checklist(string newName){
+
+    Checklist(string newName)
+    {
         setName(newName);
         setPriority(1);
         setItemFinished(false);
         setDueDate("No Date");
     }
-    
-    Checklist(string newName, int newPriority, bool newCondition, string newDate){
+
+    Checklist(string newName, int newPriority, bool newCondition, string newDate)
+    {
         setName(newName);
         setPriority(newPriority);
         setItemFinished(newCondition);
         setDueDate(newDate);
-        
     }
-    
-    
+
     /*
      Setters
      */
@@ -54,58 +55,55 @@ public:
     {
         this->ID = newID;
     }
-    
+
     void setName(string name)
     {
         this->todoName = name;
     };
-    
+
     void setPriority(int number)
     {
         this->priority = number;
     };
-    
+
     void setItemFinished(bool condition)
     {
         this->isItDone = condition;
     };
-    
+
     void setDueDate(string date)
     {
         this->dueDate = date;
     };
-    
-    
+
     /*
      Getters
      */
     int getID()
     {
         return this->ID;
-        
     }
-    
+
     string getName()
     {
         return this->todoName;
     }
-    
+
     int getPriority()
     {
         return this->priority;
-        
     }
-    
+
     bool getState()
     {
         return this->isItDone;
     }
-    
+
     string getDueDate()
     {
         return this->dueDate;
     }
-    
+
     void deleteTodo();
     string printState();
     string printPriority();
@@ -113,4 +111,3 @@ public:
 };
 
 #endif /* Checklist_hpp */
-

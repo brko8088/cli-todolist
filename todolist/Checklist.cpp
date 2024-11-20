@@ -21,7 +21,7 @@ void Checklist::deleteTodo()
 string Checklist::displayItem()
 {
     stringstream item;
-    item << setw(8)  << left << ;
+    item << setw(8) << left << ;
     item << setw(2) << left << "[";
     item << setw(2) << left << printState();
     item << setw(8) << "]";
@@ -35,10 +35,22 @@ string Checklist::printPriority()
 {
     stringstream text;
     int num = getPriority();
-    if (num == 0){text << "";}
-    else if (num == 1){text << "!";}
-    else if (num == 2){text << "!!";}
-    else if (num == 3){text << "!!!";}
+    if (num == 0)
+    {
+        text << "";
+    }
+    else if (num == 1)
+    {
+        text << "!";
+    }
+    else if (num == 2)
+    {
+        text << "!!";
+    }
+    else if (num == 3)
+    {
+        text << "!!!";
+    }
     return text.str();
 }
 

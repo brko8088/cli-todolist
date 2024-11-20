@@ -29,7 +29,7 @@ void populateDatabaseFromFile(string name, fstream &fileManage, Checklist tempLi
 void parseItemsOnDatabase(string inputBuffer, int i, Checklist todoList[]);
 void outputToDatabase(string name, fstream &outputToFile);
 
-bool processCommand (string command, Checklist todoList[], TextEntry journal[]);
+bool processCommand(string command, Checklist todoList[], TextEntry journal[]);
 string parseCommand(string command);
 bool createNewItem(string command, Checklist todoList[]);
 bool deleteNewItem(string command, Checklist todoList[]);
@@ -46,7 +46,8 @@ using namespace std;
 int TotalOfTodos = 0;
 string TCLIversion = "0.1.0";
 
-int main() {
+int main()
+{
     fstream inputFromFile;
     fstream outputToFile;
     string command = "";
@@ -55,26 +56,23 @@ int main() {
     bool programState = true;
     Checklist todoList[100];
     TextEntry journal[100];
-    
+
     cout << "Tournal Command Line Interface (TCLI)" << endl;
     cout << "Current Version: " + TCLIversion << endl;
-    
+
     userName = loadPreviousSessionUserName(inputFromFile);
     lookForUsersDatabaseOrCreateNew(userName, inputFromFile, todoList);
     outputToDatabase(userName, outputToFile);
-    
-    
-    
+
     while (programState)
     {
-        cout << userName + "@TCLI~" + TCLIversion + "~$ " ;
+        cout << userName + "@TCLI~" + TCLIversion + "~$ ";
         getline(cin, command);
         programState = processCommand(command, todoList, journal);
     }
-    
+
     return 0;
 }
-
 
 // clear cin is just a function to clear the buffer
 void clear_cin()
@@ -94,23 +92,24 @@ string printHelpMenu()
     return helpMenu.str();
 }
 
-int getChar( ) {
+int getChar()
+{
     struct termios oldt,
-    newt;
+        newt;
     int ch;
     int STDIN_FILENO = 0;
-    tcgetattr( STDIN_FILENO, &oldt );
+    tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
-    newt.c_lflag &= ~( ICANON | ECHO );
-    tcsetattr( STDIN_FILENO, TCSANOW, &newt );
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     ch = getchar();
-    tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return ch;
 }
 
 /**
  This funcition will check a file on the database and let us know what's the name of the last user who used the tool.
- 
+
  It will ask for the user to verify if it's them or ask us to enter a new username.
  */
 string loadPreviousSessionUserName(fstream &inputFromFile)
@@ -120,11 +119,10 @@ string loadPreviousSessionUserName(fstream &inputFromFile)
     {
         cout << "Enter your name to start a new database: ";
         getline(cin, userName);
-        
     }
     else
     {
-        cout << "logging into " << userName << "'s last session"<< endl;
+        cout << "logging into " << userName << "'s last session" << endl;
         userName = confirmationOfPreviousSession(userName);
     }
     return userName;
@@ -156,7 +154,8 @@ string confirmationOfPreviousSession(string userName)
 {
     char confirmation;
     bool runLoop = true;
-    do {
+    do
+    {
         cout << "Enter Y/N to confirm: ";
         cin >> confirmation;
         if (confirmation == 'n' or confirmation == 'N')
@@ -174,7 +173,7 @@ string confirmationOfPreviousSession(string userName)
             cout << "you did not enter the right command." << endl;
             clear_cin();
         }
-        
+
     } while (runLoop);
     return userName;
 }
@@ -191,7 +190,7 @@ string switchUserName()
 void lookForUsersDatabaseOrCreateNew(string name, fstream &inputFromFile, Checklist todoList[])
 {
     inputFromFile.open(name + ".txt", ios::in);
-    
+
     if (!inputFromFile)
     {
         cout << "New Database created under the name \"" << name << "\"" << endl;
@@ -204,30 +203,25 @@ void lookForUsersDatabaseOrCreateNew(string name, fstream &inputFromFile, Checkl
     inputFromFile.close();
 }
 
-
 void populateDatabaseFromFile(string name, fstream &inputFromFile, Checklist todoList[])
 {
     string inputBuffer;
     int todoIndex = 0;
     cout << "\n\n";
-    cout << setw(8) << left << "ITEM ID" <<
-            setw(10)<< left << "finished?" <<
-            setw(10)<< left << "Priority" <<
-            setw(40)<< left << "Activity to do" <<
-    setw(25)<< left << "Date that is due" << endl;
+    cout << setw(8) << left << "ITEM ID" << setw(10) << left << "finished?" << setw(10) << left << "Priority" << setw(40) << left << "Activity to do" << setw(25) << left << "Date that is due" << endl;
     cout << "------------------------------------------------------------------------------------" << endl;
-    while(getline(inputFromFile, inputBuffer))
+    while (getline(inputFromFile, inputBuffer))
     {
         parseItemsOnDatabase(inputBuffer, todoIndex, todoList);
         TotalOfTodos++;
     }
-    
+
     cout << "\n\n";
 }
 
 void parseItemsOnDatabase(string inputBuffer, int todoIndex, Checklist todoList[])
 {
-    
+
     size_t delimeterPos = inputBuffer.find('/');
     string name = inputBuffer.substr(0, delimeterPos);
     inputBuffer = inputBuffer.substr(delimeterPos + 1);
@@ -240,7 +234,7 @@ void parseItemsOnDatabase(string inputBuffer, int todoIndex, Checklist todoList[
     inputBuffer = inputBuffer.substr(delimeterPos + 1);
     string date = inputBuffer.substr(0);
     bool condition;
-    
+
     if (conditionNumber == 1)
     {
         condition = true;
@@ -249,10 +243,9 @@ void parseItemsOnDatabase(string inputBuffer, int todoIndex, Checklist todoList[
     {
         condition = false;
     }
-    
+
     todoList[todoIndex] = Checklist(name, priority, condition, date);
     cout << todoList[todoIndex].displayItem(todoIndex) << endl;
-    
 }
 
 void outputToDatabase(string name, fstream &outputToFile)
@@ -260,19 +253,14 @@ void outputToDatabase(string name, fstream &outputToFile)
     outputToFile.open(name, ios::out);
 }
 
-
-
-
-
-
-bool processCommand (string command, Checklist todoList[], TextEntry journal[])
+bool processCommand(string command, Checklist todoList[], TextEntry journal[])
 {
     string action;
     size_t delimeterPos = command.find(' ');
     if (delimeterPos > 0 and delimeterPos < 200)
     {
         action = command.substr(0, delimeterPos);
-        
+
         while (action == "")
         {
             command = command.substr(delimeterPos + 1);
@@ -285,9 +273,9 @@ bool processCommand (string command, Checklist todoList[], TextEntry journal[])
         action = command;
         command = "";
     }
-    
+
     command = command.substr(delimeterPos + 1);
-    
+
     if (action == "create")
     {
         return createNewItem(command, todoList);
@@ -318,14 +306,16 @@ bool processCommand (string command, Checklist todoList[], TextEntry journal[])
     {
         return false;
     }
-    else {
+    else
+    {
         cout << "Command not recognized." << endl;
         return true;
     }
     return true;
 }
 
-string parseCommand(string command){
+string parseCommand(string command)
+{
     string item = "";
     return item;
 }
@@ -333,7 +323,8 @@ string parseCommand(string command){
 bool createNewItem(string command, Checklist todoList[])
 {
     int index = 0;
-    while (todoList[index].getName() != ""){
+    while (todoList[index].getName() != "")
+    {
         index++;
     }
     todoList[index] = Checklist(command);
@@ -344,7 +335,7 @@ bool createNewItem(string command, Checklist todoList[])
 bool deleteNewItem(string command, Checklist todoList[])
 {
     int todoIndex;
-    
+
     if (command == "")
     {
         cout << "item ID: ";
@@ -354,37 +345,37 @@ bool deleteNewItem(string command, Checklist todoList[])
     {
         todoIndex = stoi(command);
     }
-   
+
     todoList[todoIndex].deleteTodo();
     TotalOfTodos--;
-    
+
     // Rearranging list so that IDs get reused.
-    for (int index = 0; index <= TotalOfTodos; index++){
-        if (todoList[index].getName() == "" and todoList[index + 1].getName() == "") {
+    for (int index = 0; index <= TotalOfTodos; index++)
+    {
+        if (todoList[index].getName() == "" and todoList[index + 1].getName() == "")
+        {
             todoList[index] = todoList[index + 1];
         }
     }
-    
+
     return true;
 }
 
+bool displayTodoList(Checklist todoList[])
+{
 
-bool displayTodoList(Checklist todoList[]){
-    
     cout << "\n\n";
-    cout << setw(8) << left << "ITEM ID" <<
-            setw(10)<< left << "finished?" <<
-            setw(10)<< left << "Priority" <<
-            setw(40)<< left << "Activity to do" <<
-    setw(25)<< left << "Date that is due" << endl;
+    cout << setw(8) << left << "ITEM ID" << setw(10) << left << "finished?" << setw(10) << left << "Priority" << setw(40) << left << "Activity to do" << setw(25) << left << "Date that is due" << endl;
     cout << "------------------------------------------------------------------------------------" << endl;
-    
-    for (int index = 0; index <= TotalOfTodos; index++){
-        if (todoList[index].getName() != "") {
+
+    for (int index = 0; index <= TotalOfTodos; index++)
+    {
+        if (todoList[index].getName() != "")
+        {
             cout << todoList[index].displayItem() << endl;
         }
     }
-    
+
     cout << "\n\n";
     return true;
 }
@@ -392,7 +383,7 @@ bool displayTodoList(Checklist todoList[]){
 bool createTextEntry(string command, TextEntry journal[])
 {
     string title;
-      
+
     if (command != "")
     {
         title = command;
@@ -402,29 +393,29 @@ bool createTextEntry(string command, TextEntry journal[])
         cout << "Title: ";
         getline(cin, title);
     }
-    
+
     vector<string> textLines;
     string textLine = "";
     int ch;
-    
+
     bool userTypingEntry = true;
     while (userTypingEntry)
     {
         ch = getChar();
-        
+
         //
         if (ch == 27)
         {
             userTypingEntry = false;
         }
-        
+
         // Enter Key
         else if (ch == 10)
         {
             textLines.push_back(textLine);
             textLine = "";
         }
-        
+
         // Delete Key
         else if (ch == 127)
         {
@@ -435,23 +426,15 @@ bool createTextEntry(string command, TextEntry journal[])
             textLine += ch;
         }
     }
-    
+
     cout << "Title: " << title << endl;
-    
-    for(size_t it = 0; it < textLines.size(); it++)
+
+    for (size_t it = 0; it < textLines.size(); it++)
     {
         cout << textLines[it] << endl;
     }
-    
-    
-    
-    //journal[textEntryNumber] = TextEntry(title, textLines);
-    
+
+    // journal[textEntryNumber] = TextEntry(title, textLines);
+
     return true;
 }
-
-
-
-
-
-
