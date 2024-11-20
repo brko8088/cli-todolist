@@ -30,6 +30,7 @@ int main()
     // TextEntry journal[100];
 
     greetUser();
+    startUpChecklist();
 
     // userName = loadPreviousSessionUserName(inputFromFile);
     // lookForUsersDatabaseOrCreateNew(userName, inputFromFile, todoList);
@@ -49,6 +50,10 @@ void greetUser()
 {
     cout << "Tournal Command Line Interface (TCLI)" << endl;
     cout << "Current Version: " + TCLIversion << endl;
+}
+
+void startUpChecklist()
+{
 }
 
 // bool processCommand(string command, Checklist todoList[], TextEntry journal[])
