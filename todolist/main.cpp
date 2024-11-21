@@ -3,6 +3,7 @@
 //
 
 #include "Checklist.hpp"
+#include "CheckItem.hpp"
 #include "TextEntry.hpp"
 #include <iostream>
 // #include <termios.h>
@@ -12,11 +13,11 @@
 #include <fstream>
 #include <iomanip>
 
-using namespace std;
-
-string TCLIversion = "0.1.0";
+std::string TCLIversion = "0.1.0";
 void greetUser();
-// bool processCommand(string command, Checklist todoList[], TextEntry journal[]);
+bool processCommand(std::string, Checklist checklist);
+bool createNewItem(string command, Checklist checklist);
+bool deleteNewItem(string command, Checklist checklist);
 
 int main()
 {
@@ -26,21 +27,15 @@ int main()
     string userInputCommand[10];
     string userName;
     bool programState = true;
-    // Checklist todoList[100];
-    // TextEntry journal[100];
+    Checklist checklist = Checklist();
 
     greetUser();
-    startUpChecklist();
-
-    // userName = loadPreviousSessionUserName(inputFromFile);
-    // lookForUsersDatabaseOrCreateNew(userName, inputFromFile, todoList);
-    // outputToDatabase(userName, outputToFile);
 
     while (programState)
     {
         cout << userName + "~" + TCLIversion + "~ ";
         getline(cin, command);
-        // programState = processCommand(command, todoList, journal);
+        programState = processCommand(command, checklist);
     }
 
     return 0;
@@ -52,67 +47,90 @@ void greetUser()
     cout << "Current Version: " + TCLIversion << endl;
 }
 
-void startUpChecklist()
+bool processCommand(string command, Checklist checklist)
 {
+    string action;
+    size_t delimeterPos = command.find(' ');
+    if (delimeterPos > 0 && delimeterPos < 200)
+    {
+        action = command.substr(0, delimeterPos);
+
+        while (action == "")
+        {
+            command = command.substr(delimeterPos + 1);
+            delimeterPos = command.find(' ');
+            action = command.substr(0, delimeterPos);
+        }
+    }
+    else
+    {
+        action = command;
+        command = "";
+    }
+
+    command = command.substr(delimeterPos + 1);
+
+    if (action == "create")
+    {
+        return createNewItem(command, checklist);
+    }
+    else if (action == "delete")
+    {
+        return deleteNewItem(command, checklist);
+    }
+    else if (action == "exit")
+    {
+        return false;
+    }
+    else
+    {
+        cout << "Command not recognized." << endl;
+        return true;
+    }
+    return true;
 }
 
-// bool processCommand(string command, Checklist todoList[], TextEntry journal[])
-// {
-//     string action;
-//     size_t delimeterPos = command.find(' ');
-//     if (delimeterPos > 0 && delimeterPos < 200)
-//     {
-//         action = command.substr(0, delimeterPos);
+bool createNewItem(string command, Checklist checklist)
+{
+    int index = 0;
+    std::string currentName = checklist.getItem(index).getName();
 
-//         while (action == "")
-//         {
-//             command = command.substr(delimeterPos + 1);
-//             delimeterPos = command.find(' ');
-//             action = command.substr(0, delimeterPos);
-//         }
-//     }
-//     else
-//     {
-//         action = command;
-//         command = "";
-//     }
+    while (currentName != "")
+    {
+        index++;
+        currentName = checklist.getItem(index).getName();
+    }
 
-//     command = command.substr(delimeterPos + 1);
+    CheckItem newItem = CheckItem(command);
+    checklist.addCheckitem(newItem);
+    return true;
+}
 
-//     if (action == "create")
-//     {
-//         // return createNewItem(command, todoList);
-//     }
-//     else if (action == "entry")
-//     {
-//         // return createTextEntry(command, journal);
-//     }
+bool deleteNewItem(string command, Checklist checklist)
+{
+    // int todoIndex;
 
-//     else if (action == "display")
-//     {
-//         // return displayTodoList(todoList);
-//     }
+    // if (command == "")
+    // {
+    //     cout << "item ID: ";
+    //     cin >> todoIndex;
+    // }
+    // else
+    // {
+    //     todoIndex = stoi(command);
+    // }
 
-//     else if (action == "delete")
-//     {
-//         // return deleteNewItem(command, todoList);
-//     }
-//     else if (action == "modify")
-//     {
-//         return true;
-//     }
-//     else if (action == "duplicate")
-//     {
-//         return true;
-//     }
-//     else if (action == "exit")
-//     {
-//         return false;
-//     }
-//     else
-//     {
-//         cout << "Command not recognized." << endl;
-//         return true;
-//     }
-//     return true;
-// }
+    // todoList[todoIndex].deleteTodo();
+    // TotalOfTodos--;
+
+    // // Rearranging list so that IDs get reused.
+    // for (int index = 0; index <= TotalOfTodos; index++)
+    // {
+    //     if (todoList[index].getName() == "" && todoList[index + 1].getName() == "")
+    //     {
+    //         todoList[index] = todoList[index + 1];
+    //     }
+    // }
+
+    return true;
+}

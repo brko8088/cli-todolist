@@ -8,106 +8,41 @@
 #ifndef Checklist_hpp
 #define Checklist_hpp
 
-#include <stdio.h>
+#include "CheckItem.hpp"
+#include "CheckItem.cpp"
+#include <iostream>
+#include <vector>
 #include <string>
-#include <iomanip>
-
-using namespace std;
 
 class Checklist
 {
 private:
-    int ID = 0;
-    string todoName;
-    int priority;
-    bool isItDone;
-    string dueDate;
+    static std::vector<CheckItem> checkItems;
 
 public:
     Checklist()
     {
-        setName("");
-        setPriority(0);
-        setItemFinished(false);
-        setDueDate("");
+        checkItems = std::vector<CheckItem>();
     }
 
-    Checklist(string newName)
+    std::vector<CheckItem> getCheckItems()
     {
-        setName(newName);
-        setPriority(1);
-        setItemFinished(false);
-        setDueDate("No Date");
+        return checkItems;
     }
 
-    Checklist(string newName, int newPriority, bool newCondition, string newDate)
+    CheckItem getItem(int index)
     {
-        setName(newName);
-        setPriority(newPriority);
-        setItemFinished(newCondition);
-        setDueDate(newDate);
+        return getCheckItems().at(index);
     }
 
-    /*
-     Setters
-     */
-    void setID(int newID)
+    void addCheckitem(CheckItem item)
     {
-        this->ID = newID;
+        getCheckItems().push_back(item);
     }
-
-    void setName(string name)
+    void removeCheckitemAtPosition(int itemPosition)
     {
-        this->todoName = name;
+        getCheckItems().erase(getCheckItems().begin() + itemPosition);
     };
-
-    void setPriority(int number)
-    {
-        this->priority = number;
-    };
-
-    void setItemFinished(bool condition)
-    {
-        this->isItDone = condition;
-    };
-
-    void setDueDate(string date)
-    {
-        this->dueDate = date;
-    };
-
-    /*
-     Getters
-     */
-    int getID()
-    {
-        return this->ID;
-    }
-
-    string getName()
-    {
-        return this->todoName;
-    }
-
-    int getPriority()
-    {
-        return this->priority;
-    }
-
-    bool getState()
-    {
-        return this->isItDone;
-    }
-
-    string getDueDate()
-    {
-        return this->dueDate;
-    }
-
-    void deleteTodo();
-    string printState();
-    string printPriority();
-    string displayItem();
 };
 
 #endif /* Checklist_hpp */
